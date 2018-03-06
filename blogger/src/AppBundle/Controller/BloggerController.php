@@ -13,10 +13,11 @@ class BloggerController extends Controller
    */
   public function listAction()
   {
-    $todos = $this->getDoctrine()
+    $articles = $this->getDoctrine()
         -> getRepository('AppBundle:Article')
         ->findAll();
 
-    return $this->render('todo/index.html.twig', array(
-      'todos' => $todos));
+    return $this->render('blogger/index.html.twig', array(
+      'articles' => $articles));
   }
+}
