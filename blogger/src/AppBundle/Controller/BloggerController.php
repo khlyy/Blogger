@@ -8,14 +8,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BloggerController extends Controller
 {
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function indexAction(Request $request)
-    {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
-    }
-}
+  /**
+   * @Route("/", name="Article_list")
+   */
+  public function listAction()
+  {
+    $todos = $this->getDoctrine()
+        -> getRepository('AppBundle:Article')
+        ->findAll();
+
+    return $this->render('todo/index.html.twig', array(
+      'todos' => $todos));
+  }
