@@ -96,5 +96,32 @@ class BloggerController extends Controller
         'article' => $article));
     }
 
+    /**
+     * @Route("filter/article", name="article_filter")
+     */
 
+     public function filterAction(Request $request)
+     {
+       $searchCategory = $request->get('search');
+       // $articles = $this->getDoctrine()
+       //     -> getRepository('AppBundle:Article')
+       //     ->findAll();
+
+           $em = $this->getDoctrine()->getManager();
+
+           $qb = $em->createQueryBuilder();
+
+         $qb->select('article')
+          ->from('AppBundle:Article', 'article')
+          ->where('article.category = :identifier')
+          ->setParameter('identifier', $searchCategory);
+
+         $query = $qb->getQuery();
+
+
+         $articles = $query->getResult();
+
+       return $this->render('blogger/index.html.twig', array(
+         'articles' => $articles));
+     }
 }
