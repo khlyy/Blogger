@@ -124,5 +124,6 @@ class User
     {
         return $this->type;
     }
-}
 
+
+}

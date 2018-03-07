@@ -218,4 +218,3 @@ class Article
         return $this->author;
     }
 }
-
