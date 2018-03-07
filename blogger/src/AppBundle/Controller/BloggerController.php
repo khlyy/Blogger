@@ -46,12 +46,12 @@ class BloggerController extends Controller
           -> add('category', TextType::class, array('attr'=> array('class' => 'form-control','style'=>'margin-bottom:15px')))
           -> add('description', TextareaType::class, array('attr'=> array('class' => 'form-control','style'=>'margin-bottom:15px')))
           -> add('due_date', DateTimeType::class, array('attr'=> array('class' => 'formcontrol','style'=>'margin-bottom:15px')))
-          -> add('save', SubmitType::class, array('label'=> 'create Todo','attr'=> array('class' => 'btn-btn-primary','style'=>'margin-bottom:15px')))
+          -> add('save', SubmitType::class, array('label'=> 'create Article','attr'=> array('class' => 'btn-btn-primary','style'=>'margin-bottom:15px')))
           -> getForm();
 
           $form ->handleRequest($request);
           if($form-> isSubmitted() && $form -> isValid()){
-            $author = user.getName();
+            $author = $user->getName();
             $title = $form['title']->getData();
             $category = $form['category']->getData();
             $description = $form['description']->getData();
@@ -81,6 +81,19 @@ class BloggerController extends Controller
       return $this->render('blogger/create.html.twig', array(
           'form'=>$form-> createView()
       ));
+    }
+
+
+    /**
+     * @Route("/article/details/{id} ", name="article_details")
+     */
+    public function detailsAction($id)
+    {   $article = $this->getDoctrine()
+          -> getRepository('AppBundle:Article')
+          ->find($id);
+
+      return $this->render('blogger/details.html.twig', array(
+        'article' => $article));
     }
 
 

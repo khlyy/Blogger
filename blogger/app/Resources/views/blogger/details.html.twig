@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<a class="btn btn-default" href="/"> Back To Articles</a>
+<hr>
+<h2 class="page-header">{{article.title}} </h2>
+<ul class="list-group">
+<li class="list-group-item">Category:{{article.category}}</li>
+<li class="list-group-item">Author:{{article.author}}</li>
+<li class="list-group-item">Due:<strong>{{article.dueDate|date('F j, Y, g:i a')}} </strong></li>
+</ul>
+<p>
+{{article.description}}
+</p>
+{% endblock %}
