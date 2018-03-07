@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class BloggerController extends Controller
 {
   /**
+   * get list of all articles.
    * @Route("/", name="article_list")
    */
   public function listAction()
@@ -28,11 +29,12 @@ class BloggerController extends Controller
   }
 
     /**
+      *create new article if the user is an author (type 1)
       * @Route("/article/create/{id}", name="article_create")
      */
     public function createAction(Request $request, $id)
     {
-      $user = $this->getDoctrine()
+      $user = $this->getDoctrine() // get user with the specific id to check whether he is visitor or author.
           -> getRepository('AppBundle:User')
           ->find($id);
 
@@ -85,6 +87,7 @@ class BloggerController extends Controller
 
 
     /**
+     * get the details of specific article.
      * @Route("/article/details/{id} ", name="article_details")
      */
     public function detailsAction($id)
@@ -97,21 +100,20 @@ class BloggerController extends Controller
     }
 
     /**
+     *filter the articles based on their category.
      * @Route("filter/article", name="article_filter")
      */
 
      public function filterAction(Request $request)
      {
-       $searchCategory = $request->get('search');
-       // $articles = $this->getDoctrine()
-       //     -> getRepository('AppBundle:Article')
-       //     ->findAll();
+
+       $searchCategory = $request->get('search'); // get the search input from search bar.
 
            $em = $this->getDoctrine()->getManager();
 
            $qb = $em->createQueryBuilder();
 
-         $qb->select('article')
+         $qb->select('article') // quering the article based on the given category.
           ->from('AppBundle:Article', 'article')
           ->where('article.category = :identifier')
           ->setParameter('identifier', $searchCategory);
@@ -119,7 +121,7 @@ class BloggerController extends Controller
          $query = $qb->getQuery();
 
 
-         $articles = $query->getResult();
+         $articles = $query->getResult(); // the results of articles based on the query.
 
        return $this->render('blogger/index.html.twig', array(
          'articles' => $articles));

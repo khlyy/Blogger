@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
   /**
+  * an api for seeding database (should be done using doctrine fixtures but there is a problem with composer)
   * @Route("/seed", name="database_seed")
   */
 
