@@ -28,15 +28,15 @@ class BloggerController extends Controller
   }
 
     /**
-      * @Route("/article/create/{{id}}", name="article_create")
+      * @Route("/article/create/{id}", name="article_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $id)
     {
       $user = $this->getDoctrine()
           -> getRepository('AppBundle:User')
           ->find($id);
 
-          if ($user.getType() == 2) // type 2 means this user is a visitor so he cannot add article.
+          if ($user->getType() == 2) // type 2 means this user is a visitor so he cannot add article.
             return $this->redirectToRoute('article_list');
 
 
@@ -83,61 +83,5 @@ class BloggerController extends Controller
       ));
     }
 
-    /**
-    * @Route("/seed", name="database_seed")
-    */
 
-    public function seedDatabse(Request $request){
-    $author1 = new User;
-    $author1
-        ->setName('Mohamed Khaled')
-        ->setEmail('Mohamed@gmail.com')
-        ->setType(1);
-
-    $em = $this->getDoctrine()->getManager();
-
-    $em->persist($author1);
-
-
-    $author2 = new User;
-
-    $author2
-        ->setName('Ahmed khaled')
-        ->setEmail('Ahmed@gmail.com')
-        ->setType(2);
-
-    $em->persist($author2);
-
-    $article1 = new Article;
-    $now = new\DateTime('now');
-
-    $article1
-        ->setTitle('Your first blog post example')
-        ->setCategory('sports')
-        ->setDescription('OMG SALAAH SCOOOOORED.')
-        ->setAuthor($author1->getName())
-        ->setDueDate($now)
-        ->setCreateDate($now);
-
-    $em->persist($article1);
-
-    $article2 = new Article;
-    $now = new\DateTime('now');
-
-    $article2
-        ->setTitle('Your second blog post example')
-        ->setCategory('politics')
-        ->setDescription('Politics is on fire those days.')
-        ->setAuthor($author2->getName())
-        ->setDueDate($now)
-        ->setCreateDate($now);
-
-    $em->persist($article2);
-
-
-    $em->flush();
-    return $this->redirectToRoute('article_list');
-
-
-  }
 }
