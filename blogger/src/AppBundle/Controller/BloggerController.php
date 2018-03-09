@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 use AppBundle\Entity\Article;
+use AppBundle\Entity\Category;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,19 +56,35 @@ class BloggerController extends Controller
           if($form-> isSubmitted() && $form -> isValid()){
             $author = $user->getName();
             $title = $form['title']->getData();
-            $category = $form['category']->getData();
+            $categoryName = $form['category']->getData();
             $description = $form['description']->getData();
             $due_date = $form['due_date']->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $qb = $em->createQueryBuilder();
+
+
+            $entity = $em->getRepository('AppBundle:Category')->findOneBy([
+                    'name' => $categoryName]);
+
+             $category;
+            if($entity == null){ // if category does not exist make new one and insert it.
+
+            $category = new Category();
+            $category->setName($categoryName);
+            $em -> persist($category);
+          }else{
+            $category = $entity;
+          }
 
             $now = new\DateTime('now');
             $article->setAuthor($author);
             $article-> setTitle($title);
-            $article-> setcategory ($category);
-            $article-> setdescription($description);
+            $article-> setCategory ($category);
+            $article-> setDescription($description);
             $article-> setDueDate($due_date);
             $article-> setCreateDate($now);
 
-            $em = $this->getDoctrine()->getManager();
 
             $em -> persist($article);
             $em ->flush();
@@ -109,19 +126,23 @@ class BloggerController extends Controller
 
        $searchCategory = $request->get('search'); // get the search input from search bar.
 
-           $em = $this->getDoctrine()->getManager();
+         $em = $this->getDoctrine()->getManager();
 
-           $qb = $em->createQueryBuilder();
+         $qb = $em->createQueryBuilder();
 
-         $qb->select('article') // quering the article based on the given category.
-          ->from('AppBundle:Article', 'article')
-          ->where('article.category = :identifier')
-          ->setParameter('identifier', $searchCategory);
+         $entity = $em->getRepository('AppBundle:Category')->findOneBy([
+                 'name' => $searchCategory]);
 
-         $query = $qb->getQuery();
+         $category;
+         $articles;
+        if($entity == null){ // if category does not exist then pass an empty array to the view.
+          $articles = [];
+        }else{
+          $category = $entity;
+          $articles = $category->getArticles(); // the results of articles based on the query.
+      }
 
 
-         $articles = $query->getResult(); // the results of articles based on the query.
 
        return $this->render('blogger/index.html.twig', array(
          'articles' => $articles));

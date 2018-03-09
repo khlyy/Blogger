@@ -36,9 +36,9 @@ class Article
     private $description;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="category", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="Articles")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
 
@@ -125,7 +125,7 @@ class Article
     /**
      * Set category
      *
-     * @param string $category
+     * @param Category $category
      *
      * @return Article
      */
@@ -139,7 +139,7 @@ class Article
     /**
      * Get category
      *
-     * @return string
+     * @return Category
      */
     public function getCategory()
     {
