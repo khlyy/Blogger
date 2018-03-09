@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 use AppBundle\Entity\Article;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Category;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,12 +36,21 @@ class DefaultController extends Controller
 
   $em->persist($author2);
 
+  $category1 = new Category();
+  $category1->setName("sports");
+
+  $category2 = new Category();
+  $category2->setName("politics");
+
+  $em->persist($category1);
+  $em->persist($category2);
+
   $article1 = new Article;
   $now = new\DateTime('now');
 
   $article1
       ->setTitle('Your first blog post example')
-      ->setCategory('sports')
+      ->setCategory($category1)
       ->setDescription('OMG SALAAH SCOOOOORED.')
       ->setAuthor($author1->getName())
       ->setDueDate($now)
@@ -53,7 +63,7 @@ class DefaultController extends Controller
 
   $article2
       ->setTitle('Your second blog post example')
-      ->setCategory('politics')
+      ->setCategory($category2)
       ->setDescription('Politics is on fire those days.')
       ->setAuthor($author2->getName())
       ->setDueDate($now)
